@@ -22,12 +22,13 @@ def download():
         finishLabel.configure(text="", text_color="white")
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
 
+        # Choose Video or only Audio
         if check.get() == "on":
             audio = ytObject.streams.get_audio_only()
             audio.download("C:\D\PyTube\Musik")
 
         elif check.get() == "off":
-            # Audio und Video Streams
+            # Choose Highest Quality Video Stream
             highest_res_video = ytObject.streams.filter(adaptive=True, only_video=True).order_by('resolution').desc().first()
             # Check for Quality
             print(ytObject.streams.order_by('resolution').desc())
@@ -35,7 +36,7 @@ def download():
             highest_res_video.download("C:\D\PyTube\merge" , "input_video.mp4")
             ytObject.streams.get_audio_only().download("C:\D\PyTube\merge", "input_audio.mp4")
 
-            # Merging with ffmpeg
+            # Merging with ffmpeg (for Videos with 1080p or higher)
             video_stream = ffmpeg.input("C:\D\PyTube\merge\input_video.mp4")
             audio_stream = ffmpeg.input("C:\D\PyTube\merge\input_audio.mp4")
             ffmpeg.output(audio_stream, video_stream, "C:\D\PyTube\Videos\\" + ytObject.title + ".mp4").run()
