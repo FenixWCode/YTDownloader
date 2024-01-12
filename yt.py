@@ -2,10 +2,22 @@ from pytube import YouTube
 import tkinter
 import customtkinter
 import ffmpeg
+import os
 
 
 def download():
     try:
+        # Delete Files used for merging
+        if os.path.exists("C:\D\PyTube\merge\input_video.mp4"):
+            os.remove("C:\D\PyTube\merge\input_video.mp4")
+        else:
+            print("File not Found!")
+
+        if os.path.exists("C:\D\PyTube\merge\input_audio.mp4"):
+            os.remove("C:\D\PyTube\merge\input_audio.mp4")
+        else:
+            print("File not Found!")
+
         ytLink = link.get()
         finishLabel.configure(text="", text_color="white")
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
@@ -18,14 +30,14 @@ def download():
             # Audio und Video Streams
             highest_res_video = ytObject.streams.filter(adaptive=True, only_video=True).order_by('resolution').desc().first()
             # Check for Quality
-            print(ytObject.streams.filter(only_video=True).order_by('resolution').desc())
+            print(ytObject.streams.order_by('resolution').desc())
             print(highest_res_video)
-            highest_res_video.download("C:\D\PyTube\merge", ytObject.title + "_video.mp4")
-            ytObject.streams.get_audio_only().download("C:\D\PyTube\merge", ytObject.title + "_audio.mp4")
+            highest_res_video.download("C:\D\PyTube\merge" , "input_video.mp4")
+            ytObject.streams.get_audio_only().download("C:\D\PyTube\merge", "input_audio.mp4")
 
             # Merging with ffmpeg
-            video_stream = ffmpeg.input("C:\D\PyTube\merge\\" + ytObject.title + "_video.mp4")
-            audio_stream = ffmpeg.input("C:\D\PyTube\merge\\" + ytObject.title + "_audio.mp4")
+            video_stream = ffmpeg.input("C:\D\PyTube\merge\input_video.mp4")
+            audio_stream = ffmpeg.input("C:\D\PyTube\merge\input_audio.mp4")
             ffmpeg.output(audio_stream, video_stream, "C:\D\PyTube\Videos\\" + ytObject.title + ".mp4").run()
 
         finishLabel.configure(text="Downloaded!")
