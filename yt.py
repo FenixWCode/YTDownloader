@@ -3,7 +3,7 @@ import tkinter
 import customtkinter
 import ffmpeg
 import os
-
+import time
 
 def download():
     # Change these Paths
@@ -22,6 +22,8 @@ def download():
         else:
             print("Audio file not found!")
 
+        finishLabel.configure(text="", text_color="white")
+
         ytLink = link.get()
         finishLabel.configure(text="", text_color="white")
         ytObject = YouTube(ytLink, on_progress_callback=on_progress)
@@ -38,6 +40,8 @@ def download():
             # Debugging
             print(ytObject.streams.order_by('resolution').desc())
             print(highest_res_video)
+
+            # Highest Res + only Audio Download
             highest_res_video.download("C:\D\PyTube\merge" , "input_video.mp4")
             ytObject.streams.get_audio_only().download("C:\D\PyTube\merge", "input_audio.mp4")
 
@@ -48,8 +52,13 @@ def download():
 
         finishLabel.configure(text="Downloaded!")
 
+        time.sleep(2)
+
+        # Reset UI for next Download
         progressBar.set(0)
-        finishLabel.configure(text="", text_color="white")
+        percentage.configure(text="0%")
+        link.delete(0, 200)
+
 
     except:
         finishLabel.configure(text="Download Error", text_color="red")
