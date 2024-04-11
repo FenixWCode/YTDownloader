@@ -72,30 +72,30 @@ app.title("PyTube")
 
 # UI Elements
 title = customtkinter.CTkLabel(app, text="Insert a YouTube Link")
-title.pack(padx=10, pady=10,)
+title.pack(padx=10, pady=20)
 
 # Link Input
 url_var = tkinter.StringVar()
 link = customtkinter.CTkEntry(app, width=350, height=40, textvariable=url_var)
-link.pack()
+link.pack(padx=300, fill='x')
+
+# Audio only Checkbox
+check_var = customtkinter.StringVar(value="on")
+check = customtkinter.CTkCheckBox(app, text="Only Audio", onvalue="on", offvalue="off")
+check.pack(padx=10, pady=20)
 
 # Finished Downloading
 finishLabel = customtkinter.CTkLabel(app, text="")
 finishLabel.pack()
 
-# Audio only Checkbox
-check_var = customtkinter.StringVar(value="on")
-check = customtkinter.CTkCheckBox(app, text="Only Audio", onvalue="on", offvalue="off")
-check.pack(padx=10, pady=10)
-
 # Download Button
 download = customtkinter.CTkButton(app, text="Download", command=download)
-download.pack(padx=10, pady=30, side="bottom")
+download.pack(padx=30, pady=20, side="bottom")
 
 # Progress Bar
 progressBar = customtkinter.CTkProgressBar(app, width=400)
 progressBar.set(0)
-progressBar.pack(padx=10, pady=10, side="bottom")
+progressBar.pack(padx=300, fill='x', pady=10, side="bottom")
 
 percentage = customtkinter.CTkLabel(app, text="0%")
 percentage.pack(side="bottom")
