@@ -6,17 +6,21 @@ import os
 
 
 def download():
+    # Change these Paths
+    input_video = "C:\D\PyTube\merge\input_video.mp4"
+    input_audio = "C:\D\PyTube\merge\input_audio.mp4"
+
     try:
         # Delete Files used for merging
-        if os.path.exists("C:\D\PyTube\merge\input_video.mp4"):
-            os.remove("C:\D\PyTube\merge\input_video.mp4")
+        if os.path.exists(input_video):
+            os.remove(input_video)
         else:
-            print("File not Found!")
+            print("Video file not found!")
 
-        if os.path.exists("C:\D\PyTube\merge\input_audio.mp4"):
-            os.remove("C:\D\PyTube\merge\input_audio.mp4")
+        if os.path.exists(input_audio):
+            os.remove(input_audio)
         else:
-            print("File not Found!")
+            print("Audio file not found!")
 
         ytLink = link.get()
         finishLabel.configure(text="", text_color="white")
@@ -30,15 +34,16 @@ def download():
         elif check.get() == "off":
             # Choose Highest Quality Video Stream
             highest_res_video = ytObject.streams.filter(adaptive=True, only_video=True).order_by('resolution').desc().first()
-            # Check for Quality
+
+            # Debugging
             print(ytObject.streams.order_by('resolution').desc())
             print(highest_res_video)
             highest_res_video.download("C:\D\PyTube\merge" , "input_video.mp4")
             ytObject.streams.get_audio_only().download("C:\D\PyTube\merge", "input_audio.mp4")
 
             # Merging with ffmpeg (for Videos with 1080p or higher)
-            video_stream = ffmpeg.input("C:\D\PyTube\merge\input_video.mp4")
-            audio_stream = ffmpeg.input("C:\D\PyTube\merge\input_audio.mp4")
+            video_stream = ffmpeg.input(input_video)
+            audio_stream = ffmpeg.input(input_audio)
             ffmpeg.output(audio_stream, video_stream, "C:\D\PyTube\Videos\\" + ytObject.title + ".mp4").run()
 
         finishLabel.configure(text="Downloaded!")
